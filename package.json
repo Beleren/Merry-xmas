@@ -1,0 +1,8 @@
+{
+  "name": "RankMyApp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Beleren/Merry-xmas.git",
+  "author": "Leandro Haruki Futema <leandroharuki@gmail.com>",
+  "license": "MIT"
+}
