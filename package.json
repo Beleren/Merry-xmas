@@ -6,7 +6,9 @@
   "author": "Leandro Haruki Futema <leandroharuki@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "mercadolibre": "^0.0.13",
     "mongoose": "^5.8.2",
     "node-cron": "^2.0.3",
     "nodemailer": "^6.4.2",

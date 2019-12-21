@@ -1,15 +1,28 @@
 const express = require('express')
+require('dotenv').config()
 const mongoose = require('mongoose')
 const nodemailer = require('nodemailer')
 const cron = require('node-cron')
+const meli = require('mercadolibre')
 const User = require('./Models/User')
 
 const app = express()
 // Connect to MongoDB
 mongoose
-  .connect('mongodb://mongo:27017/docker-node-mongo', { useNewUrlParser: true })
+  .connect(`mongodb://mongo:27017/${process.env.DOCKER_CONTAINER}`, { useNewUrlParser: true })
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err))
+
+app.get('/meli', (req, res) => {
+  const meliObject = new meli.Meli(
+    process.env.MELI_CLIENT_ID,
+   process.env.MELI_CLIENT_SECRET 
+  )
+  meliObject.get('/sites/MLA/search?q=Motorola%20G6', (err, data) => {
+    if (err) return res.status(500).send(err)
+    return res.send(data)
+  })
+})
 
 app.get('/', async (req, res) => {
   try {
@@ -36,8 +49,8 @@ app.get('/mail', (req, res) => {
     host: 'smtp.mailtrap.io',
     port: 2525,
     auth: {
-      user: '7961a02b9d9d04',
-      pass: 'c0e17454989f1e',
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASSWORD,
     },
   })
   const task = cron.schedule('* * * * *', () => {
