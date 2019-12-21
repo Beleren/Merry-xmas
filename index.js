@@ -1,10 +1,12 @@
 const express = require('express')
 require('dotenv').config()
+const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const nodemailer = require('nodemailer')
-const cron = require('node-cron')
+const { CronJob } = require('cron')
 const meli = require('mercadolibre')
-const bodyParser = require('body-parser')
+const Email = require('email-templates')
+
 const User = require('./models/User')
 
 const app = express()
@@ -75,13 +77,13 @@ app.post('/email', async (req, res) => {
 })
 
 app.get('/mail', (req, res) => {
-  const { MAIL_HOST, MAIL_PORT, MAIL_USER, MAIL_PASSWORD } = process.env
-  const mailOptions = {
-    from: 'teste@teste.com',
-    to: 'fulano@teste.com',
-    subject: 'Email from Node-App: A Test Message!',
-    text: 'Some content to send',
-  }
+  const {
+    MAIL_HOST,
+    MAIL_PORT,
+    MAIL_USER,
+    MAIL_PASSWORD,
+    MAIL_FROM,
+  } = process.env
 
   const transporter = nodemailer.createTransport({
     host: MAIL_HOST,
@@ -91,16 +93,28 @@ app.get('/mail', (req, res) => {
       pass: MAIL_PASSWORD,
     },
   })
-  const task = cron.schedule('* * * * *', () => {
-    transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-        res.status(500).send(error)
-      } else {
-        res.send({ message: 'Email sent', info: info.response })
-      }
+
+  const email = new Email({
+    message: {
+      from: MAIL_FROM,
+    },
+    send: true,
+    transport: transporter,
+  })
+
+  const task = new CronJob('* * * * *', () => {
+    email.send({
+      template: 'newsletter',
+      message: {
+        to: 'elon@spacex.com',
+      },
+      locals: {
+        name: 'Elon',
+      },
     })
   })
   task.start()
+  res.send('Email was successfully scheduled!')
 })
 
 app.listen(process.env.API_PORT, () => {

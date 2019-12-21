@@ -7,13 +7,15 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cron": "^1.7.2",
     "dotenv": "^8.2.0",
+    "email-templates": "^6.1.1",
     "express": "^4.17.1",
     "mercadolibre": "^0.0.13",
     "mongoose": "^5.8.2",
-    "node-cron": "^2.0.3",
     "nodemailer": "^6.4.2",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "pug": "^2.0.4"
   },
   "scripts": {
     "start": "nodemon index.js"
