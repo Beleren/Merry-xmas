@@ -9,16 +9,23 @@ const User = require('./Models/User')
 const app = express()
 // Connect to MongoDB
 mongoose
-  .connect(`mongodb://mongo:27017/${process.env.DOCKER_CONTAINER}`, { useNewUrlParser: true })
+  .connect(
+    `mongodb://mongo:${process.env.MONGODB_PORT}/${process.env.DOCKER_CONTAINER}`,
+    {
+      useNewUrlParser: true,
+    }
+  )
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err))
 
 app.get('/meli', (req, res) => {
+  const { item = '' } = req.query
+  const query = encodeURI(item)
   const meliObject = new meli.Meli(
     process.env.MELI_CLIENT_ID,
-   process.env.MELI_CLIENT_SECRET 
+    process.env.MELI_CLIENT_SECRET
   )
-  meliObject.get('/sites/MLA/search?q=Motorola%20G6', (err, data) => {
+  meliObject.get(`/sites/MLA/search?q=${query}`, (err, data) => {
     if (err) return res.status(500).send(err)
     return res.send(data)
   })
@@ -38,6 +45,7 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/mail', (req, res) => {
+  const { MAIL_HOST, MAIL_PORT, MAIL_USER, MAIL_PASSWORD } = process.env
   const mailOptions = {
     from: 'teste@teste.com',
     to: 'fulano@teste.com',
@@ -46,11 +54,11 @@ app.get('/mail', (req, res) => {
   }
 
   const transporter = nodemailer.createTransport({
-    host: 'smtp.mailtrap.io',
-    port: 2525,
+    host: MAIL_HOST,
+    port: MAIL_PORT,
     auth: {
-      user: process.env.MAIL_USER,
-      pass: process.env.MAIL_PASSWORD,
+      user: MAIL_USER,
+      pass: MAIL_PASSWORD,
     },
   })
   const task = cron.schedule('* * * * *', () => {
@@ -65,6 +73,6 @@ app.get('/mail', (req, res) => {
   task.start()
 })
 
-app.listen(3000, () => {
+app.listen(process.env.API_PORT, () => {
   console.log('Server listening on port 3000!')
 })
