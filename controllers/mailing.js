@@ -38,43 +38,58 @@ exports.save = async (req, res) => {
   }
 }
 
-exports.send = (req, res) => {
-  const {
-    MAIL_HOST,
-    MAIL_PORT,
-    MAIL_USER,
-    MAIL_PASSWORD,
-    MAIL_FROM,
-  } = process.env
+exports.findOrPass = async (req, res, next) => {
+  const { email } = req.query
+  const user = await User.findOne({ email })
+  if (!user) {
+    return res.status(404).send('User not found')
+  }
+  req.user = user
+  return next()
+}
 
-  const transporter = nodemailer.createTransport({
-    host: MAIL_HOST,
-    port: MAIL_PORT,
-    auth: {
-      user: MAIL_USER,
-      pass: MAIL_PASSWORD,
-    },
-  })
+exports.send = async (req, res) => {
+  try {
+    const {
+      MAIL_HOST,
+      MAIL_PORT,
+      MAIL_USER,
+      MAIL_PASSWORD,
+      MAIL_FROM,
+    } = process.env
 
-  const email = new Email({
-    message: {
-      from: MAIL_FROM,
-    },
-    send: true,
-    transport: transporter,
-  })
-
-  const task = new CronJob('* * * * *', () => {
-    email.send({
-      template: 'newsletter',
-      message: {
-        to: 'elon@spacex.com',
-      },
-      locals: {
-        name: 'Elon',
+    const { user } = req
+    const transporter = nodemailer.createTransport({
+      host: MAIL_HOST,
+      port: MAIL_PORT,
+      auth: {
+        user: MAIL_USER,
+        pass: MAIL_PASSWORD,
       },
     })
-  })
-  task.start()
-  res.send('Email was successfully scheduled!')
+
+    const emailToSend = new Email({
+      message: {
+        from: MAIL_FROM,
+      },
+      send: true,
+      transport: transporter,
+    })
+
+    // const task = new CronJob('* * * * *', () => {
+    emailToSend.send({
+      template: 'newsletter',
+      message: {
+        to: user.email,
+      },
+      locals: {
+        items: user.items,
+      },
+    })
+    // })
+    // task.start()
+    res.send('Email was successfully scheduled!')
+  } catch (error) {
+    res.status(500).send(error)
+  }
 }

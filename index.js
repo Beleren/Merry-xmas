@@ -25,8 +25,7 @@ app.use(bodyParser.json())
 
 app.get('/search', Meli.search)
 app.post('/save', Mailing.updateOrPass, Mailing.save)
-
-app.get('/send', Mailing.send)
+app.get('/send', Mailing.findOrPass, Mailing.send)
 
 app.listen(process.env.API_PORT, () => {
   console.log('Server listening on port 3000!')
