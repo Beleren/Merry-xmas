@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer')
 const cron = require('node-cron')
 const meli = require('mercadolibre')
 const bodyParser = require('body-parser')
-const User = require('./Models/User')
+const User = require('./models/User')
 
 const app = express()
 // Connect to MongoDB
@@ -39,7 +39,7 @@ app.get('/meli', (req, res) => {
 })
 
 // https://stackoverflow.com/a/41502103/8128330
-app.use(async (req, res, next) => {
+app.use('/email', async (req, res, next) => {
   try {
     const { email, interval, item } = req.body
     const updatedUser = await User.findOneAndUpdate(
