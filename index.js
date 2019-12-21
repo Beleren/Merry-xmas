@@ -12,7 +12,6 @@ mongoose
 app.get("/", async (req, res) => {
   try {
     const newUser = new User({
-      _id: mongoose.Types.ObjectId(),
       email: "teste@teste.com",
       interval: 69420911,
     });
