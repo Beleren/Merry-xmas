@@ -2,25 +2,30 @@ const nodemailer = require('nodemailer')
 const { CronJob } = require('cron')
 const Email = require('email-templates')
 const User = require('../models/User')
+const Meli = require('../services/meli')
 
-exports.updateOrPass = async (req, res, next) => {
+exports.findOrUpdate = async (req, res, next) => {
   try {
     const { email, item, interval } = req.body
+    req.item = item
     // https://stackoverflow.com/a/41502103/8128330
     const updatedUser = await User.findOneAndUpdate(
       { email },
       { $push: { items: { name: item, interval } } },
       { new: true, upsert: true }
     )
-    if (updatedUser) return res.send(updatedUser)
-    return next()
+    if (updatedUser) {
+      req.user = updatedUser
+    }
+    next()
   } catch (error) {
-    return res.status(500).send(error)
+    res.status(500).send(error)
   }
 }
 
-exports.save = async (req, res) => {
+exports.save = async (req, res, next) => {
   try {
+    if (req.user) return next()
     const { email, interval, item } = req.body
     const newUser = new User({
       email,
@@ -31,21 +36,11 @@ exports.save = async (req, res) => {
         },
       ],
     })
-    const persistedUser = await newUser.save()
-    res.send(persistedUser)
+    req.user = await newUser.save()
+    return next()
   } catch (error) {
-    res.status(500).send({ message: 'Deu ruim!', error })
+    return res.status(500).send(error)
   }
-}
-
-exports.findOrPass = async (req, res, next) => {
-  const { email } = req.query
-  const user = await User.findOne({ email })
-  if (!user) {
-    return res.status(404).send('User not found')
-  }
-  req.user = user
-  return next()
 }
 
 exports.send = async (req, res) => {
@@ -58,7 +53,8 @@ exports.send = async (req, res) => {
       MAIL_FROM,
     } = process.env
 
-    const { user } = req
+    const { user, item } = req
+    const meliSearch = await Meli.search(item)
     const transporter = nodemailer.createTransport({
       host: MAIL_HOST,
       port: MAIL_PORT,
@@ -83,12 +79,12 @@ exports.send = async (req, res) => {
         to: user.email,
       },
       locals: {
-        items: user.items,
+        items: meliSearch.results.slice(0, 3),
       },
     })
     // })
     // task.start()
-    res.send('Email was successfully scheduled!')
+    res.send({message: 'Email was successfully scheduled!', results: meliSearch.results.slice(0, 3)})
   } catch (error) {
     res.status(500).send(error)
   }

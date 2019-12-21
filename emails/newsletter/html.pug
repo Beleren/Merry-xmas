@@ -1,2 +1,9 @@
-p Hi #{name},
-p Welcome to Mars, the red planet.
+h1 Merry Xmas!
+hr
+ul
+  each item in items
+    li
+      img(src=item.thumbnail)
+      p= item.title
+      p= item.price
+    hr
