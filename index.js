@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const nodemailer = require('nodemailer')
 const cron = require('node-cron')
 const meli = require('mercadolibre')
+const bodyParser = require('body-parser')
 const User = require('./Models/User')
 
 const app = express()
@@ -18,6 +19,12 @@ mongoose
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err))
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
 app.get('/meli', (req, res) => {
   const { item = '' } = req.query
   const query = encodeURI(item)
@@ -31,11 +38,34 @@ app.get('/meli', (req, res) => {
   })
 })
 
-app.get('/', async (req, res) => {
+// https://stackoverflow.com/a/41502103/8128330
+app.use(async (req, res, next) => {
   try {
+    const { email, interval, item } = req.body
+    const updatedUser = await User.findOneAndUpdate(
+      { email },
+      { $push: { items: { name: item, interval } } },
+      { new: true, upsert: true }
+    )
+
+    if (updatedUser) return res.send(updatedUser)
+
+    return next()
+  } catch (error) {
+    return res.status(500).send('deu ruim!', error)
+  }
+})
+app.post('/email', async (req, res) => {
+  try {
+    const { email, interval, item } = req.body
     const newUser = new User({
-      email: 'leandroharuki@gmail.com',
-      interval: 69420911,
+      email,
+      items: [
+        {
+          name: item,
+          interval,
+        },
+      ],
     })
     const persistedUser = await newUser.save()
     res.send(persistedUser)
