@@ -2,11 +2,11 @@ FROM node:10-alpine
 
 RUN mkdir /app
 
-RUN npm install nodemon -g
+RUN yarn global add nodemon
 
 WORKDIR /app
-COPY package*.json app/
-RUN npm install
+COPY package.json yarn.lock app/
+RUN yarn install
 COPY . app/
 
-CMD [ "npm", "start" ]
+CMD [ "yarn", "start" ]
