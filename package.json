@@ -18,7 +18,7 @@
     "pug": "^2.0.4"
   },
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
