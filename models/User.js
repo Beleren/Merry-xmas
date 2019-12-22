@@ -30,8 +30,8 @@ const UserSchema = new Schema({
       interval: {
         type: Number,
         required: true,
-        min: [120, 'Interval is too short!'],
-        max: [1800, 'Interval is too big!'],
+        min: [120, 'Interval is too short! Minimum of 120'],
+        max: [1800, 'Interval is too big! Maximum of 1800'],
       },
     },
   ],

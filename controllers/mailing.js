@@ -6,13 +6,13 @@ const Meli = require('../services/meli')
 
 exports.findOrUpdate = async (req, res, next) => {
   try {
-    const { email, item, interval } = req.body
+    const { email, interval, item } = req.body
     req.item = item
     // https://stackoverflow.com/a/41502103/8128330
     const updatedUser = await User.findOneAndUpdate(
       { email },
       { $push: { items: { name: item, interval } } },
-      { new: true, upsert: true }
+      { new: true, upsert: true, runValidators: true }
     )
     if (updatedUser) {
       req.user = updatedUser
@@ -53,8 +53,10 @@ exports.send = async (req, res) => {
       MAIL_FROM,
     } = process.env
 
+    const { interval } = req.body
     const { user, item } = req
     const meliSearch = await Meli.search(item)
+    const items = meliSearch.results.slice(0, 3)
     const transporter = nodemailer.createTransport({
       host: MAIL_HOST,
       port: MAIL_PORT,
@@ -72,19 +74,23 @@ exports.send = async (req, res) => {
       transport: transporter,
     })
 
-    // const task = new CronJob('* * * * *', () => {
-    emailToSend.send({
-      template: 'newsletter',
-      message: {
-        to: user.email,
-      },
-      locals: {
-        items: meliSearch.results.slice(0, 3),
-      },
+    const task = new CronJob(`*/${interval} * * * * *`, function() {
+      emailToSend.send({
+        template: 'newsletter',
+        message: {
+          to: user.email,
+        },
+        locals: {
+          search: item,
+          items,
+        },
+      })
     })
-    // })
-    // task.start()
-    res.send({message: 'Email was successfully scheduled!', results: meliSearch.results.slice(0, 3)})
+    task.start()
+    res.send({
+      message: 'Email was successfully scheduled!',
+      items,
+    })
   } catch (error) {
     res.status(500).send(error)
   }

@@ -5,7 +5,7 @@ services:
     restart: always
     build: .
     volumes:
-    - ".:/app"
+      - ".:/app"
     ports: 
       - '3000:3000'
     environment:
