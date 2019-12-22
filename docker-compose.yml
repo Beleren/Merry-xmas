@@ -23,5 +23,7 @@ services:
     build: ./frontend
     volumes:
       - "./frontend:/client"
+    environment: 
+      - PORT=8000
     ports:
       - "8000:8000"
