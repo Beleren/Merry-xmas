@@ -25,6 +25,7 @@
     "eslint-loader": "3.0.2",
     "eslint-plugin-flowtype": "3.13.0",
     "file-loader": "4.3.0",
+    "formik": "^2.0.8",
     "fs-extra": "^8.1.0",
     "html-webpack-plugin": "4.0.0-beta.5",
     "identity-obj-proxy": "3.0.0",
@@ -55,7 +56,8 @@
     "webpack": "4.41.2",
     "webpack-dev-server": "3.9.0",
     "webpack-manifest-plugin": "2.2.0",
-    "workbox-webpack-plugin": "4.3.1"
+    "workbox-webpack-plugin": "4.3.1",
+    "yup": "^0.28.0"
   },
   "scripts": {
     "start": "node scripts/start.js",
@@ -133,13 +135,14 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
+    "eslint": "5.16.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.17.0",
-    "eslint-plugin-react-hooks": "^1.7.0"
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "prettier": "^1.19.1"
   }
 }
