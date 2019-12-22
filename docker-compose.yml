@@ -1,11 +1,11 @@
 version: '3'
 services: 
-  app:
+  api:
     container_name: docker-node-mongo
     restart: always
-    build: .
+    build: ./backend
     volumes:
-      - ".:/app"
+      - "./backend:/api"
     ports: 
       - '3000:3000'
     environment:
