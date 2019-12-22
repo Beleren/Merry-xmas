@@ -1,12 +1,12 @@
 FROM node:10-alpine
 
-RUN mkdir /app
+RUN mkdir /api
 
 RUN yarn global add nodemon
 
-WORKDIR /app
-COPY package.json yarn.lock app/
+WORKDIR /api
+COPY package.json yarn.lock api/
 RUN yarn install
-COPY . app/
+COPY . api/
 
 CMD [ "yarn", "start" ]

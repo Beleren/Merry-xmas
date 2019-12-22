@@ -1,19 +1,27 @@
-version: '3'
-services: 
-  app:
+version: "3"
+services:
+  api:
     container_name: docker-node-mongo
     restart: always
-    build: .
+    build: ./backend
     volumes:
-      - ".:/app"
-    ports: 
-      - '3000:3000'
+      - "./backend:/api"
+    ports:
+      - "3000:3000"
     environment:
       - NODE_ENV=development
-    links: 
+    links:
       - mongo
+      - client
   mongo:
     container_name: mongo
     image: mongo
     ports:
-      - '27017:27017'
+      - "27017:27017"
+  client:
+    container_name: docker-react
+    build: ./frontend
+    volumes:
+      - "./frontend:/client"
+    ports:
+      - "8000:8000"
