@@ -2,6 +2,7 @@ const express = require('express')
 require('dotenv').config()
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+const cors = require('cors')
 const Mailing = require('./controllers/mailing')
 
 const app = express()
@@ -16,6 +17,7 @@ mongoose
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.error(err))
 
+app.use(cors())
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
