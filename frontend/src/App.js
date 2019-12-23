@@ -1,19 +1,26 @@
-// Render Prop
+/*
+Ideias de tema de natal:
+Letra chique
+Cores verde, vermelho, branco e um pouco de amarelo
+*/
 import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import './App.scss'
 
 const App = () => (
   <div>
-    <h1>Any place in your app!</h1>
+    <h1>What do you want for Christmas?</h1>
     <Formik
-      initialValues={{ email: '', search: '', interval: '' }}
+      initialValues={{
+        email: '',
+        item: '',
+        interval: '',
+      }}
       validationSchema={Yup.object().shape({
         email: Yup.string()
           .required('Please fill the email field')
           .email('This is not a valid email address!'),
-        search: Yup.string()
+        item: Yup.string()
           .max(50, 'Search text is too long!')
           .required('Please fill the search field'),
         interval: Yup.number()
@@ -22,19 +29,28 @@ const App = () => (
           .required('Please choose an interval to send email'),
       })}
       onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2))
-          setSubmitting(false)
-        }, 400)
+        console.log(process.env.REACT_APP_API_URL)
+        fetch(`${process.env.REACT_APP_API_URL}/subscribe`, {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify(values),
+        })
+          .then(response => response.json())
+          .then(res => {
+            setSubmitting(false)
+          })
       }}
     >
       {({ isSubmitting, handleChange, handleBlur, values }) => (
         <Form>
           <Field type="email" name="email" />
           <ErrorMessage name="email" component="div" />
-          <Field type="text" name="search" />
-          <ErrorMessage name="search" component="div" />
-          <select
+          <Field type="text" name="item" />
+          <ErrorMessage name="intem" component="div" />
+          <Field
+            as="select"
             name="interval"
             value={values.interval}
             onChange={handleChange}
@@ -53,10 +69,10 @@ const App = () => (
             <option value="1800" label="30 minutes">
               30 minutes
             </option>
-          </select>
+          </Field>
           <ErrorMessage name="interval" component="div" />
           <button type="submit" disabled={isSubmitting}>
-            Submit
+            Send to Santa
           </button>
         </Form>
       )}

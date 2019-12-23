@@ -5,7 +5,7 @@ services:
     restart: always
     build: ./backend
     volumes:
-      - "./backend:/api"
+      - ./backend:/api
     ports:
       - "3000:3000"
     environment:
@@ -22,8 +22,9 @@ services:
     container_name: docker-react
     build: ./frontend
     volumes:
-      - "./frontend:/client"
+      - ./frontend:/client
     environment: 
       - PORT=8000
+      - REACT_APP_API_URL=http://localhost:3000
     ports:
       - "8000:8000"
