@@ -55,8 +55,6 @@ exports.send = async (req, res) => {
 
     const { interval } = req.body
     const { user, item } = req
-    const meliSearch = await Meli.search(item)
-    const items = meliSearch.results.slice(0, 3)
     const transporter = nodemailer.createTransport({
       host: MAIL_HOST,
       port: MAIL_PORT,
@@ -74,7 +72,9 @@ exports.send = async (req, res) => {
       transport: transporter,
     })
 
-    const task = new CronJob(`*/${interval} * * * * *`, function() {
+    const task = new CronJob(`*/${interval} * * * * *`, async () => {
+      const meliSearch = await Meli.search(item)
+      const items = meliSearch.results.slice(0, 3)
       emailToSend.send({
         template: 'newsletter',
         message: {
@@ -89,9 +89,8 @@ exports.send = async (req, res) => {
     task.start()
     res.send({
       message: 'Email was successfully scheduled!',
-      items,
     })
   } catch (error) {
-    res.status(500).send(error)
+    res.status(500).send({ message: 'Could not send email', error })
   }
 }
