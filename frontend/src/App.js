@@ -1,83 +1,47 @@
-/*
-Ideias de tema de natal:
-Letra chique
-Cores verde, vermelho, branco e um pouco de amarelo
-*/
 import React from 'react'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
+import { ThemeProvider, createGlobalStyle } from 'styled-components'
+import SubscriptionForm from './components/SubscriptionForm'
+import theme from './utils/theme'
 
-const App = () => (
-  <div>
-    <h1>What do you want for Christmas?</h1>
-    <Formik
-      initialValues={{
-        email: '',
-        item: '',
-        interval: '',
-      }}
-      validationSchema={Yup.object().shape({
-        email: Yup.string()
-          .required('Please fill the email field')
-          .email('This is not a valid email address!'),
-        item: Yup.string()
-          .max(50, 'Search text is too long!')
-          .required('Please fill the search field'),
-        interval: Yup.number()
-          .min(120)
-          .max(1800)
-          .required('Please choose an interval to send email'),
-      })}
-      onSubmit={(values, { setSubmitting }) => {
-        console.log(process.env.REACT_APP_API_URL)
-        fetch(`${process.env.REACT_APP_API_URL}/subscribe`, {
-          method: 'POST',
-          headers: {
-            'Content-type': 'application/json',
-          },
-          body: JSON.stringify(values),
-        })
-          .then(response => response.json())
-          .then(res => {
-            setSubmitting(false)
-          })
-      }}
-    >
-      {({ isSubmitting, handleChange, handleBlur, values }) => (
-        <Form>
-          <Field type="email" name="email" />
-          <ErrorMessage name="email" component="div" />
-          <Field type="text" name="item" />
-          <ErrorMessage name="intem" component="div" />
-          <Field
-            as="select"
-            name="interval"
-            value={values.interval}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            style={{ display: 'block' }}
-          >
-            <option value="" label="Select an interval">
-              Select an interval
-            </option>
-            <option value="120" label="2 minutes">
-              2 minutes
-            </option>
-            <option value="600" label="10 minutes">
-              10 minutes
-            </option>
-            <option value="1800" label="30 minutes">
-              30 minutes
-            </option>
-          </Field>
-          <ErrorMessage name="interval" component="div" />
-          <button type="submit" disabled={isSubmitting}>
-            Send to Santa
-          </button>
-        </Form>
-      )}
-    </Formik>
-  </div>
-)
+const GlobalStyle = createGlobalStyle`
+  /* latin */
+  @font-face {
+    font-family: 'Mountains of Christmas';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Mountains of Christmas Regular'), local('MountainsofChristmas-Regular'), url(https://fonts.gstatic.com/s/mountainsofchristmas/v12/3y9w6a4zcCnn5X0FDyrKi2ZRUBIy8uxoUo7eDNGsMQ.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  /* latin */
+  @font-face {
+    font-family: 'Mountains of Christmas';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: local('Mountains of Christmas Bold'), local('MountainsofChristmas-Bold'), url(https://fonts.gstatic.com/s/mountainsofchristmas/v12/3y9z6a4zcCnn5X0FDyrKi2ZRUBIy8uxoUo7eBGqJJPxIOw.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  * {
+    font-family: Mountains of Christmas, cursive;
+  }
+  *, *:before, *:after {
+    box-sizing: border-box
+  }
 
-export default App
+  body {
+    padding: ${theme.space[0]};
+    margin: ${theme.space[0]};
+    color: ${theme.colors.black};
+    background-color: ${theme.colors.green};
+  }
+`
+
+export default function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <SubscriptionForm />
+    </ThemeProvider>
+  )
+}
