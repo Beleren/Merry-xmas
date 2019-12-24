@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { submitForm } from '../../redux/actions/formActions'
 import Container from '../Container'
 import {
+  GiftGrid,
   XmasButton,
   XmasError,
   XmasInput,
@@ -76,13 +77,16 @@ const SubscriptionFormView = () => {
           </XmasForm>
         )}
       </Formik>
-      <XmasTitle>Gifts</XmasTitle>
-      {items.map((item, index) => (
-        <div key={index}>
-          <p>{item.item}</p>
-          <p>{item.interval}</p>
-        </div>
-      ))}
+      {items.length > 0 && <XmasTitle>Gifts</XmasTitle>}
+      <GiftGrid>
+        {items.map((item, index) => (
+          <div key={index}>
+            <img src="/gift-box.svg" width="45px" />
+            <p>Item: {item.item}</p>
+            <p>Interval: {item.interval / 60} minutes</p>
+          </div>
+        ))}
+      </GiftGrid>
     </Container>
   )
 }

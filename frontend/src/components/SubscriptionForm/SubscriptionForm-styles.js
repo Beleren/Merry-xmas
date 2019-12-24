@@ -36,3 +36,13 @@ export const XmasError = styled(ErrorMessage)`
   font-size: ${props => props.theme.fontSize[4]};
   color: ${props => props.theme.colors.darkred};
 `
+
+export const GiftGrid = styled.div`
+  display: grid;
+  grid-gap: ${props => props.theme.space[3]};
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  justify-items: center;
+  p {
+    margin: 0;
+  }
+`
