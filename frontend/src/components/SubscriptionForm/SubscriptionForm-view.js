@@ -24,19 +24,19 @@ const SubscriptionFormView = () => {
         initialValues={{
           email: '',
           item: '',
-          interval: 0,
+          interval: '',
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string()
             .required('Please fill the email field')
             .email('This is not a valid email address!'),
           item: Yup.string()
-            .max(50, 'Search text is too long!')
-            .required('Please fill the search field'),
+            .required('Please fill the search field')
+            .max(50, 'Search text is too long!'),
           interval: Yup.number()
-            .min(120)
-            .max(1800)
-            .required('Please choose an interval to send email'),
+            .required('Please choose an interval to send email')
+            .min(120, 'Interval must be greater or equals to 2 minutes')
+            .max(1800, 'Interval must be lower or equals to 30 minutes'),
         })}
         onSubmit={async (values, { setSubmitting }) => {
           await dispatch(submitForm(values))
@@ -81,7 +81,7 @@ const SubscriptionFormView = () => {
       <GiftGrid>
         {items.map((item, index) => (
           <div key={index}>
-            <img src="/gift-box.svg" width="45px" />
+            <img src="/gift-box.svg" width="45px" alt="Gift box" />
             <p>Item: {item.item}</p>
             <p>Interval: {item.interval / 60} minutes</p>
           </div>

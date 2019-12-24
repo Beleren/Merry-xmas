@@ -15,6 +15,7 @@ export const XmasForm = styled(Form)`
 `
 export const XmasInput = styled(Field)`
   width: 50%;
+  border-radius: 5px;
   margin-top: ${props => props.theme.space[2]};
   padding: ${props => `${props.theme.space[2]} ${props.theme.space[3]}`};
   font-size: ${props => props.theme.fontSize[4]};
@@ -33,6 +34,7 @@ export const XmasButton = styled.button`
 `
 
 export const XmasError = styled(ErrorMessage)`
+  margin-bottom: ${props => props.theme.space[2]};
   font-size: ${props => props.theme.fontSize[4]};
   color: ${props => props.theme.colors.darkred};
 `
