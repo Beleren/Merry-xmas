@@ -1,7 +1,7 @@
 import React from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { submitForm } from '../../redux/actions/formActions'
 import Container from '../Container'
 import {
@@ -13,7 +13,9 @@ import {
   XmasTitle,
 } from './SubscriptionForm-styles'
 
-const SubscriptionFormView = props => {
+const SubscriptionFormView = () => {
+  const items = useSelector(state => state.items.items)
+  const dispatch = useDispatch()
   return (
     <Container>
       <XmasTitle>What do you want for Christmas?</XmasTitle>
@@ -36,7 +38,7 @@ const SubscriptionFormView = props => {
             .required('Please choose an interval to send email'),
         })}
         onSubmit={async (values, { setSubmitting }) => {
-          await props.submitForm(values)
+          await dispatch(submitForm(values))
           setSubmitting(false)
         }}
       >
@@ -75,8 +77,8 @@ const SubscriptionFormView = props => {
         )}
       </Formik>
       <XmasTitle>Gifts</XmasTitle>
-      {props.items.map(item => (
-        <div>
+      {items.map((item, index) => (
+        <div key={index}>
           <p>{item.item}</p>
           <p>{item.interval}</p>
         </div>
@@ -85,8 +87,4 @@ const SubscriptionFormView = props => {
   )
 }
 
-const mapStateToProps = state => ({
-  items: state.items.items,
-})
-
-export default connect(mapStateToProps, { submitForm })(SubscriptionFormView)
+export default SubscriptionFormView
