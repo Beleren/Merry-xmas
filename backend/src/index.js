@@ -8,6 +8,7 @@ async function startServer() {
   await loaders({ expressApp: app })
 
   app.post('/subscribe', UserController.subscribe)
+  app.get('/list', UserController.list)
   app.listen(process.env.PORT, err => {
     if (err) {
       console.log(err)

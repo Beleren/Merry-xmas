@@ -22,3 +22,8 @@ exports.subscribe = async (req, res) => {
     res.status(500).send({ message: 'Could not send email', error })
   }
 }
+
+exports.list = async (req, res) => {
+  const users = await User.find({})
+  res.send(users)
+}
