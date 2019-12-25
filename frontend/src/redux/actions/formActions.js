@@ -1,4 +1,4 @@
-import { ADD_ITEM } from './types'
+import { ADD_ITEM, FETCH_ITEMS } from './types'
 
 export const submitForm = formData => async dispatch => {
   try {
@@ -10,9 +10,24 @@ export const submitForm = formData => async dispatch => {
       body: JSON.stringify(formData),
     })
     const res = await response.json()
+    console.log(res)
+    if (!res.error)
+      dispatch({
+        type: ADD_ITEM,
+        payload: res,
+      })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const fetchItems = () => async dispatch => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/list`)
+    const res = await response.json()
     dispatch({
-      type: ADD_ITEM,
-      payload: formData,
+      type: FETCH_ITEMS,
+      payload: res,
     })
   } catch (error) {
     console.log(error)

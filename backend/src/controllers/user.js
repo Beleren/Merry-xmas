@@ -6,7 +6,7 @@ const Mailer = require('../services/mailer')
 exports.subscribe = async (req, res) => {
   try {
     const { email, interval, item } = req.body
-    await User.saveOrUpdate({ email, interval, item })
+    const newUser = await User.saveOrUpdate({ email, interval, item })
     const task = new CronJob(`*/${interval} * * * * *`, async () => {
       // sorted is needed because there is no sort param to query search
       const meliSearch = await Meli.search(item)
@@ -15,9 +15,7 @@ exports.subscribe = async (req, res) => {
       Mailer.send({ email, item, items })
     })
     task.start()
-    res.send({
-      message: 'Email was successfully scheduled!',
-    })
+    res.send(newUser)
   } catch (error) {
     res.status(500).send({ message: 'Could not send email', error })
   }

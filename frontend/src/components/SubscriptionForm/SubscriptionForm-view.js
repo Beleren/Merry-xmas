@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
-import { submitForm } from '../../redux/actions/formActions'
+import { submitForm, fetchItems } from '../../redux/actions/formActions'
 import Container from '../Container'
 import {
   GiftGrid,
@@ -15,8 +15,11 @@ import {
 } from './SubscriptionForm-styles'
 
 const SubscriptionFormView = () => {
-  const items = useSelector(state => state.items.items)
+  const users = useSelector(state => state.users.users)
   const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(fetchItems())
+  }, [])
   return (
     <Container>
       <XmasTitle>What do you want for Christmas?</XmasTitle>
@@ -77,15 +80,18 @@ const SubscriptionFormView = () => {
           </XmasForm>
         )}
       </Formik>
-      {items.length > 0 && <XmasTitle>Gifts</XmasTitle>}
+      {users.length > 0 && <XmasTitle>Gifts</XmasTitle>}
       <GiftGrid>
-        {items.map((item, index) => (
-          <div key={index}>
-            <img src="/gift-box.svg" width="45px" alt="Gift box" />
-            <p>Item: {item.item}</p>
-            <p>Interval: {item.interval / 60} minutes</p>
-          </div>
-        ))}
+        {users.map(user =>
+          user.items.map(item => (
+            <div key={item._id}>
+              <img src="/gift-box.svg" width="45px" alt="Gift box" />
+              <p>Email:{user.email}</p>
+              <p>Item: {item.name}</p>
+              <p>Interval: {item.interval / 60} minutes</p>
+            </div>
+          ))
+        )}
       </GiftGrid>
     </Container>
   )
