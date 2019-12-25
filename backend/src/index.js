@@ -1,13 +1,13 @@
 const express = require('express')
 const loaders = require('./loaders')
 require('dotenv').config()
-const Mailing = require('./controllers/mailing')
+const UserController = require('./controllers/user')
 
 async function startServer() {
   const app = express()
   await loaders({ expressApp: app })
 
-  app.post('/subscribe', Mailing.findOrUpdate, Mailing.save, Mailing.send)
+  app.post('/subscribe', UserController.subscribe)
   app.listen(process.env.PORT, err => {
     if (err) {
       console.log(err)
