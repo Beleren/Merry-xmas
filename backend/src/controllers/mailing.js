@@ -1,8 +1,7 @@
-const nodemailer = require('nodemailer')
 const { CronJob } = require('cron')
-const Email = require('email-templates')
 const User = require('../models/User')
 const Meli = require('../services/meli')
+const Mailer = require('../services/mailer')
 
 exports.findOrUpdate = async (req, res, next) => {
   try {
@@ -45,48 +44,14 @@ exports.save = async (req, res, next) => {
 
 exports.send = async (req, res) => {
   try {
-    const {
-      MAIL_HOST,
-      MAIL_PORT,
-      MAIL_USER,
-      MAIL_PASSWORD,
-      MAIL_FROM,
-    } = process.env
-
     const { interval } = req.body
     const { user, item } = req
-    const transporter = nodemailer.createTransport({
-      host: MAIL_HOST,
-      port: MAIL_PORT,
-      auth: {
-        user: MAIL_USER,
-        pass: MAIL_PASSWORD,
-      },
-    })
-
-    const emailToSend = new Email({
-      message: {
-        from: MAIL_FROM,
-      },
-      send: true,
-      transport: transporter,
-    })
-
     const task = new CronJob(`*/${interval} * * * * *`, async () => {
       // sorted is needed because there is no sort param to query search
       const meliSearch = await Meli.search(item)
       const sortedSearch = meliSearch.results.sort((a, b) => a.price - b.price)
       const items = sortedSearch.slice(0, 3)
-      emailToSend.send({
-        template: 'newsletter',
-        message: {
-          to: user.email,
-        },
-        locals: {
-          search: item,
-          items,
-        },
-      })
+      Mailer({ email: user.email, item, items })
     })
     task.start()
     res.send({
