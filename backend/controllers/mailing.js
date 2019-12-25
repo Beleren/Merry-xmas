@@ -76,7 +76,7 @@ exports.send = async (req, res) => {
       // sorted is needed because there is no sort param to query search
       const meliSearch = await Meli.search(item)
       const sortedSearch = meliSearch.results.sort((a, b) => a.price - b.price)
-      const items = sortedSearch.results.slice(0, 3)
+      const items = sortedSearch.slice(0, 3)
       emailToSend.send({
         template: 'newsletter',
         message: {
