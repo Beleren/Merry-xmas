@@ -73,8 +73,10 @@ exports.send = async (req, res) => {
     })
 
     const task = new CronJob(`*/${interval} * * * * *`, async () => {
+      // sorted is needed because there is no sort param to query search
       const meliSearch = await Meli.search(item)
-      const items = meliSearch.results.slice(0, 3)
+      const sortedSearch = meliSearch.results.sort((a, b) => a.price - b.price)
+      const items = sortedSearch.results.slice(0, 3)
       emailToSend.send({
         template: 'newsletter',
         message: {
