@@ -10,7 +10,7 @@ exports.findOrUpdate = async (req, res, next) => {
     req.item = item
     // https://stackoverflow.com/a/41502103/8128330
     const updatedUser = await User.findOneAndUpdate(
-      { email },
+      { email, 'items.name': { $ne: item } },
       { $push: { items: { name: item, interval } } },
       { new: true, upsert: true, runValidators: true }
     )
