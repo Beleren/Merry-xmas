@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer')
 const Email = require('email-templates')
 
-module.exports = ({ email, item, items }) => {
+exports.send = ({ email, item, items }) => {
   const {
     MAIL_HOST,
     MAIL_PORT,

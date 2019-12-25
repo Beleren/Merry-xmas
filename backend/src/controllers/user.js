@@ -12,7 +12,7 @@ exports.subscribe = async (req, res) => {
       const meliSearch = await Meli.search(item)
       const sortedSearch = meliSearch.results.sort((a, b) => a.price - b.price)
       const items = sortedSearch.slice(0, 3)
-      Mailer({ email, item, items })
+      Mailer.send({ email, item, items })
     })
     task.start()
     res.send({
