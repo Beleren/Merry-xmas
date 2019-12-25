@@ -37,6 +37,29 @@ const UserSchema = new Schema({
   ],
 })
 
+UserSchema.statics.saveOrUpdate = async function({ email, interval, item }) {
+  let user = null
+  // https://stackoverflow.com/a/41502103/8128330
+  const updatedUser = await this.findOneAndUpdate(
+    { email, 'items.name': { $ne: item } },
+    { $push: { items: { name: item, interval } } },
+    { new: true, upsert: true, runValidators: true }
+  )
+  if (!updatedUser) {
+    const newUser = new UserSchema({
+      email,
+      items: [
+        {
+          name: item,
+          interval,
+        },
+      ],
+    })
+    user = await newUser.save()
+  } else user = updatedUser
+  return user
+}
+
 const User = mongoose.model('User', UserSchema)
 
 module.exports = User
