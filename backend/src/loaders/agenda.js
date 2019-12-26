@@ -6,5 +6,6 @@ module.exports = ({ mongoConnection }) => {
     db: { collection: process.env.AGENDA_COLLECTION },
     processEvery: process.env.AGENDA_PROCESS_INTERVAL,
     maxConcurrency: process.env.AGENDA_CONCURRENCY,
+    defaultLockLifetime: process.env.AGENDA_LOCK_TIME,
   })
 }
