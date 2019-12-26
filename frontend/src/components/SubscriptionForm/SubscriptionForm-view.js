@@ -9,6 +9,7 @@ import {
 } from '../../redux/actions/formActions'
 import Container from '../Container'
 import {
+  Gift,
   GiftGrid,
   XmasButton,
   XmasError,
@@ -45,9 +46,10 @@ const SubscriptionFormView = () => {
             .min(120, 'Interval must be greater or equals to 2 minutes')
             .max(1800, 'Interval must be lower or equals to 30 minutes'),
         })}
-        onSubmit={async (values, { setSubmitting }) => {
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
           await dispatch(submitForm(values))
           setSubmitting(false)
+          resetForm({})
         }}
       >
         {({ isSubmitting, handleChange, handleBlur, values }) => (
@@ -88,7 +90,7 @@ const SubscriptionFormView = () => {
       <GiftGrid>
         {users.map(user =>
           user.items.map(item => (
-            <div
+            <Gift
               key={item._id}
               onClick={() =>
                 dispatch(deleteItem({ email: user.email, item: item.name }))
@@ -107,7 +109,7 @@ const SubscriptionFormView = () => {
                 <b>Interval: </b>
                 {item.interval / 60} minutes
               </p>
-            </div>
+            </Gift>
           ))
         )}
       </GiftGrid>

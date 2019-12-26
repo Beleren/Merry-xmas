@@ -41,11 +41,25 @@ export const XmasError = styled(ErrorMessage)`
 
 export const GiftGrid = styled.div`
   display: grid;
-  grid-gap: ${props => props.theme.space[5]};
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-gap: ${props => props.theme.space[4]};
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   justify-items: center;
   padding-bottom: ${props => props.theme.space[3]};
   p {
     margin: 0;
+  }
+`
+
+export const Gift = styled.div`
+  cursor: pointer;
+  width: 200px;
+  border-radius: 5px;
+  border: 1px solid ${props => props.theme.colors.black};
+  padding: ${props => props.theme.space[3]};
+  background: rgba(255, 255, 255, 0.2);
+  transition: 0.5s ease;
+  :hover {
+    box-shadow: 0 0 0 5px ${props => props.theme.colors.black};
+    transition: 0.5s ease;
   }
 `
