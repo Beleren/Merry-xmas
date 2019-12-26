@@ -21,7 +21,7 @@ exports.unsubscribe = async (req, res) => {
   try {
     const { email, item } = req.body
     const nRemovedJobs = await agendaService.unsubscribe({ email, item })
-    const updatedUser = await User.update(
+    const updatedUser = await User.updateOne(
       { email },
       { $pull: { items: { name: item } } }
     )

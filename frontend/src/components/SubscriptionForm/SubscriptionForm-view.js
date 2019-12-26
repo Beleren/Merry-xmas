@@ -2,7 +2,11 @@ import React, { useEffect } from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
-import { submitForm, fetchItems } from '../../redux/actions/formActions'
+import {
+  submitForm,
+  deleteItem,
+  fetchItems,
+} from '../../redux/actions/formActions'
 import Container from '../Container'
 import {
   GiftGrid,
@@ -84,11 +88,25 @@ const SubscriptionFormView = () => {
       <GiftGrid>
         {users.map(user =>
           user.items.map(item => (
-            <div key={item._id}>
+            <div
+              key={item._id}
+              onClick={() =>
+                dispatch(deleteItem({ email: user.email, item: item.name }))
+              }
+            >
               <img src="/gift-box.svg" width="45px" alt="Gift box" />
-              <p>Email:{user.email}</p>
-              <p>Item: {item.name}</p>
-              <p>Interval: {item.interval / 60} minutes</p>
+              <p>
+                <b>Email: </b>
+                {user.email}
+              </p>
+              <p>
+                <b>Item: </b>
+                {item.name}
+              </p>
+              <p>
+                <b>Interval: </b>
+                {item.interval / 60} minutes
+              </p>
             </div>
           ))
         )}

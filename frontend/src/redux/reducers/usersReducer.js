@@ -1,4 +1,4 @@
-import { ADD_ITEM, FETCH_ITEMS } from '../actions/types'
+import { FETCH_ITEMS } from '../actions/types'
 
 const initialState = {
   users: [{ items: [] }],
@@ -6,12 +6,6 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case ADD_ITEM:
-      return {
-        ...state,
-        users: [...state.users, action.payload],
-      }
-
     case FETCH_ITEMS:
       return {
         ...state,

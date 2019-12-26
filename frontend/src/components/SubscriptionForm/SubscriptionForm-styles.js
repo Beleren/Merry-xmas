@@ -42,7 +42,7 @@ export const XmasError = styled(ErrorMessage)`
 export const GiftGrid = styled.div`
   display: grid;
   grid-gap: ${props => props.theme.space[5]};
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   justify-items: center;
   padding-bottom: ${props => props.theme.space[3]};
   p {
