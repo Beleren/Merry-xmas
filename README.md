@@ -31,3 +31,15 @@ The API is based on a [layered architecture](https://dev.to/santypk4/bulletproof
 
 ## Client
 The client side file organization is based on a [model](https://medium.com/@Charles_Stover/optimal-file-structure-for-react-applications-f3e35ad0a145) suggested by Charles Stover, the data layer is managed with `redux` and styling was made using `styled-components` since my docker container didn't like `node-sass` lib.
+
+You can actually run some noob tests I did with `yarn test`.
+
+## Extra
+
+There were a couple things I wish I did for the challenge and might finish it later as a finished work for my own portfolio:
+
+- Refactoring API service layer;
+- Testing API;
+- Better E-mail layout;
+- Better client side UX;
+- Better client side tests.
