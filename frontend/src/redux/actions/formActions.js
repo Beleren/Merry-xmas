@@ -10,8 +10,7 @@ export const submitForm = formData => async dispatch => {
       body: JSON.stringify(formData),
     })
     const res = await response.json()
-    console.log(res)
-    if (!res.error)
+    if (response.status === 201)
       dispatch({
         type: ADD_ITEM,
         payload: res,

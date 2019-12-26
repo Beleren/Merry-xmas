@@ -6,9 +6,9 @@ exports.subscribe = async (req, res) => {
     const { email, interval, item } = req.body
     const newUser = await User.saveOrUpdate({ email, interval, item })
     agendaService.subscribe({ email, interval, item })
-    res.send(newUser)
+    res.status(201).send(newUser)
   } catch (error) {
-    res.status(500).send(error)
+    res.status(400).send(error)
   }
 }
 
