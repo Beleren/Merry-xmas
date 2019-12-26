@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer')
 const Email = require('email-templates')
 
-exports.send = ({ email, item, items }) => {
+exports.send = async ({ email, item, items }) => {
   const {
     MAIL_HOST,
     MAIL_PORT,
@@ -35,4 +35,5 @@ exports.send = ({ email, item, items }) => {
       items,
     },
   })
+  return { delivered: 1, status: 'ok' }
 }
