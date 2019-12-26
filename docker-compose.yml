@@ -10,21 +10,24 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-    links:
+      - PORT=3000
+    working_dir: /api
+    depends_on:
       - mongo
-      - client
   mongo:
     container_name: mongo
     image: mongo
     ports:
       - "27017:27017"
+    command: '--noauth'
   client:
     container_name: docker-react
     build: ./frontend
     volumes:
       - ./frontend:/client
-    environment: 
-      - PORT=8000
+    environment:
+      - PORT=3000
       - REACT_APP_API_URL=http://localhost:3000
+    working_dir: /client
     ports:
-      - "8000:8000"
+      - "8000:3000"
