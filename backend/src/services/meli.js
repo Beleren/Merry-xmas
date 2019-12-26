@@ -5,15 +5,24 @@ const meliObject = new meli.Meli(
   process.env.MELI_CLIENT_SECRET
 )
 
-exports.search = (item = '') => {
+exports.search = async (item = '') => {
   const query = encodeURI(item)
+  let items = []
 
-  return new Promise((resolve, reject) =>
-    meliObject.get(`/sites/MLB/search?q=${query}&sort=price_asc`, (err, data) => {
-      if (err) {
-        reject(err)
+  const meliSearch = await new Promise((resolve, reject) =>
+    meliObject.get(
+      `/sites/MLB/search?q=${query}&sort=price_asc`,
+      (err, data) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(data)
       }
-      resolve(data)
-    })
+    )
   )
+  if (meliSearch.results.length > 0) {
+    const sortedSearch = meliSearch.results.sort((a, b) => a.price - b.price)
+    items = sortedSearch.slice(0, 3)
+  }
+  return items
 }
