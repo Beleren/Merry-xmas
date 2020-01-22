@@ -9,4 +9,4 @@ RUN yarn global add nodemon
 #RUN yarn install
 #COPY . api/
 
-CMD [ "yarn", "start" ]
+CMD [ "yarn", "debug" ]

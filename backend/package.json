@@ -21,7 +21,8 @@
     "typedi": "^0.8.0"
   },
   "scripts": {
-    "start": "nodemon src/index.js"
+    "start": "nodemon src/index.js",
+    "debug": "nodemon --inspect=0.0.0.0 src/index.js"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
