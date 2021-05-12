@@ -15,7 +15,7 @@
     "express": "^4.17.1",
     "mercadolibre": "^0.0.13",
     "mongoose": "^5.8.2",
-    "nodemailer": "^6.4.2",
+    "nodemailer": "^6.4.16",
     "nodemon": "^2.0.2",
     "pug": "^2.0.4",
     "typedi": "^0.8.0"
